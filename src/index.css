@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Caveat:wght@500;600&family=Nunito:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #FF4D8D;
+    --color-primary-dark: #E83A7A;
+    --color-plum: #5B2A86;
+    --color-leaf: #A8CF5B;
+    --color-blush: #FBDDEB;
+    --color-peach: #FDE3D3;
+    --color-mint: #E3F1CC;
+    --color-lilac: #EBDDF7;
+    --color-sunny: #FFF0C2;
+}
+
+* {
+    font-family: 'Nunito', sans-serif;
+}
+
+.font-baloo {
+    font-family: 'Baloo 2', sans-serif !important;
+}
+
+.font-script {
+    font-family: 'Caveat', cursive !important;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
