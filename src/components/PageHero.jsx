@@ -19,7 +19,15 @@ const PageHero = ({ crumb, badge, title, accent, smallAccent, script, text, imag
           {badge && <p className='px-3 py-1 rounded-full bg-lilac text-[10px] md:text-xs font-bold text-plum'>{badge}</p>}
         </div>
         <h1 className='font-baloo font-bold text-plum text-[26px] sm:text-4xl md:text-5xl leading-[1.05]'>
-          {title} <br /> <span className={`text-primary ${smallAccent ? 'text-lg sm:text-2xl md:text-3xl' : ''}`}>{accent}</span>
+         {title}
+         {accent && (
+          <>
+            <br />
+            <span className={`text-primary ${smallAccent ? 'text-lg sm:text-2xl md:text-3xl' : ''}`}>
+              {accent}
+            </span>
+          </>
+         )}
         </h1>
         <p className='text-[11px] sm:text-sm md:text-base text-gray-700 mt-3 max-w-sm'>{text}</p>
         {button && (

@@ -9,10 +9,21 @@ import Shop from './pages/Shop'
 import FAQ from './pages/FAQ'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import ProductDetails from './pages/ProductDetails'
+import Cart from './pages/Cart'
+import Admin from './pages/Admin'
 
 const App = () => {
   const { pathname } = useLocation()
   useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+
+  if (pathname.startsWith('/admin')) {
+    return (
+      <Routes>
+        <Route path='/admin' element={<Admin />} />
+      </Routes>
+    )
+  }
 
   return (
     <div className='bg-white text-gray-600 pb-16 md:pb-0'>
@@ -25,6 +36,8 @@ const App = () => {
           <Route path='/faq' element={<FAQ />} />
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />}/>
+          <Route path='/product/:id' element={<ProductDetails />} />
+          <Route path='/cart' element={<Cart />} />
         </Routes>
       </div>
       <Footer />

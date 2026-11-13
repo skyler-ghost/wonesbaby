@@ -106,10 +106,19 @@ export const navLinks = [
   { name: "Shop", path: "/shop" },
   { name: "About", path: "/about" },
   { name: "FAQ", path: "/faq" },
-  { name: "Contact", path: "/contact"},
+  { name: "Contact", path: "/contact" },
 ];
 // Shop page data (images are reused placeholders until you add more photos)
 export const shopCategories = ["Teethers", "Feeding"];
+
+export const categoryInfo = {
+  Teethers:
+    "is made from 100% food-grade silicone, BPA-free, and designed to be soft, safe and easy for little hands to hold. Its grip-friendly design helps with hand-eye coordination, fine motor skill development and provides relief for teething gums.",
+
+  Feeding:
+    "is made from soft, flexible, food-grade silicone that is BPA-free, non-toxic and gentle on your baby. Its easy-grip shape makes feeding time simpler for both baby and parent, and it is easy to clean after every use.",
+};
+
 export const priceRanges = [
   { label: "Under $25", min: 0, max: 25 },
   { label: "$25 – ₦40", min: 25, max: 40 },
@@ -321,13 +330,97 @@ export const promises = [
     text: "Supports motor skills & coordination",
   },
 ];
+
+export const adminNav = [
+  { name: "Dashboard", icon: "fa-house", active: true },
+  { name: "Products", icon: "fa-box" },
+  { name: "Orders", icon: "fa-cart-shopping", badge: 12 },
+  { name: "Customers", icon: "fa-users" },
+  { name: "Coupons", icon: "fa-tags" },
+  { name: "Settings", icon: "fa-gear" },
+];
+export const adminStats = [
+  {
+    label: "Total Orders",
+    value: "124",
+    change: "+12%",
+    icon: "fa-cart-shopping",
+    bg: "bg-blush",
+    color: "text-primary",
+  },
+  {
+    label: "Total Customers",
+    value: "1,850",
+    change: "+8%",
+    icon: "fa-users",
+    bg: "bg-mint",
+    color: "text-leaf",
+  },
+  {
+    label: "Total Revenue",
+    value: "₦563,200",
+    change: "+15%",
+    icon: "fa-wallet",
+    bg: "bg-lilac",
+    color: "text-plum",
+  },
+  {
+    label: "Total Products",
+    value: String(allProducts.length),
+    change: "+2%",
+    icon: "fa-box",
+    bg: "bg-sunny",
+    color: "text-orange-400",
+  },
+];
+
+export const adminSales = [
+  { month: "Jan", value: 52 },
+  { month: "Feb", value: 90 },
+  { month: "Mar", value: 70 },
+  { month: "Apr", value: 130 },
+  { month: "May", value: 108 },
+  { month: "Jun", value: 150 },
+];
+
+export const adminOrders = [
+  {
+    id: "#00124",
+    customer: "Adebayo T.",
+    amount: 39,
+    status: "Pending",
+    date: "2h ago",
+  },
+  {
+    id: "#00123",
+    customer: "Funmi A.",
+    amount: 61,
+    status: "Delivered",
+    date: "1d ago",
+  },
+  {
+    id: "#00122",
+    customer: "Tunde K.",
+    amount: 22,
+    status: "Processing",
+    date: "2d ago",
+  },
+];
+
+export const adminActions = [
+  { name: "Add Product", icon: "fa-cube" },
+  { name: "View Orders", icon: "fa-cart-shopping" },
+  { name: "Manage Products", icon: "fa-tag" },
+  { name: "View Customers", icon: "fa-users" },
+];
+
 export const footerLinks = {
   quick: [
     { name: "Home", path: "/" },
     { name: "Shop", path: "/shop" },
     { name: "About", path: "/about" },
     { name: "FAQ", path: "/faq" },
-    { name: "Contact", path: "/contact"},
+    { name: "Contact", path: "/contact" },
   ],
   care: ["Shipping & Returns", "Privacy Policy", "Terms & Conditions"],
 };
