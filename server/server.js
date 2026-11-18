@@ -34,6 +34,10 @@ app.use('/api', apiLimiter)
 app.use('/uploads', express.static(uploadsDir))
 
 app.get('/api/health', (req, res) => res.json({ ok: true }))
+// Public store settings the frontend needs (so currency and shipping are never hardcoded there)
+app.get('/api/config', (req, res) =>
+  res.json({ currency: env.defaultCurrency, shippingFee: env.shippingFee, paymentProvider: env.paymentProvider })
+)
 app.use('/api/auth', authRoutes)
 app.use('/api/customers', customerRoutes)
 app.use('/api/products', productRoutes)

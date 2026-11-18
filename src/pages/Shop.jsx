@@ -1,13 +1,38 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import PageHero from '../components/PageHero'
 import ProductCard from '../components/ProductCard'
 import ContactBanner from '../components/ContactBanner'
-import { assets, allProducts, shopCategories, priceRanges } from '../assets/assets'
+import { assets } from '../assets/assets'
+import { useApi } from '../lib/useApi'
+import { useStore } from '../context/StoreContext'
 
 const PAGE_SIZE = 8
 
+// Photo for each category tile (categories themselves come from the products in the database)
+const categoryImages = {
+  Teethers: assets.categories.newborn,
+  Newborn: assets.categories.newborn,
+  Feeding: assets.categories.feeding,
+  'Bath Time': assets.categories.bathTime,
+  'Toys & Play': assets.categories.toysPlay,
+  'On The Go': assets.categories.onTheGo,
+}
+
 const Shop = () => {
-  const [cats, setCats] = useState([])
+  const { money } = useStore()
+  const [params] = useSearchParams()
+  const { data, loading, error } = useApi('/api/products?limit=100')
+  const allProducts = data?.products || []
+  const shopCategories = [...new Set(allProducts.map((p) => p.category))].sort()
+
+  const priceRanges = [
+    { label: `Under ${money(25)}`, min: 0, max: 25 },
+    { label: `${money(25)} – ${money(40)}`, min: 25, max: 40 },
+    { label: `${money(40)}+`, min: 40, max: Infinity },
+  ]
+
+  const [cats, setCats] = useState(() => (params.get('category') ? [params.get('category')] : []))
   const [prices, setPrices] = useState([])
   const [sort, setSort] = useState('popular')
   const [page, setPage] = useState(1)
@@ -23,7 +48,7 @@ const Shop = () => {
     (cats.length === 0 || cats.includes(p.category)) &&
     (prices.length === 0 || prices.some((i) => p.price >= priceRanges[i].min && p.price < priceRanges[i].max))
   )
-  if (sort === 'popular') items = [...items].sort((a, b) => b.reviews - a.reviews)
+  if (sort === 'popular') items = [...items].sort((a, b) => b.reviews - a.reviews || b.rating - a.rating)
   if (sort === 'low') items = [...items].sort((a, b) => a.price - b.price)
   if (sort === 'high') items = [...items].sort((a, b) => b.price - a.price)
 
@@ -79,9 +104,9 @@ const Shop = () => {
 
       {/* Category strip (desktop) */}
       <div className='hidden lg:flex gap-4 mt-5'>
-        {[['Newborn', assets.categories.newborn], ['Feeding', assets.categories.feeding], ['Bath Time', assets.categories.bathTime], ['Toys & Play', assets.categories.toysPlay], ['On The Go', assets.categories.onTheGo]].map(([name, img]) => (
-          <button key={name} onClick={() => { setCats([name]); setPage(1) }} className='rounded-2xl overflow-hidden bg-peach/50 hover:-translate-y-1 transition-all cursor-pointer'>
-            <img src={img} alt={name} className='w-full h-20 object-cover object-top mix-blend-multiply' />
+        {shopCategories.map((name) => (
+          <button key={name} onClick={() => { setCats([name]); setPage(1) }} className='w-36 rounded-2xl overflow-hidden bg-peach/50 hover:-translate-y-1 transition-all cursor-pointer'>
+            <img src={categoryImages[name] || assets.categories.feeding} alt={name} className='w-full h-20 object-cover object-top mix-blend-multiply' />
             <p className='text-xs font-bold text-gray-800 py-2'>{name}</p>
           </button>
         ))}
@@ -99,15 +124,26 @@ const Shop = () => {
         {/* Products */}
         <div>
           <div className='flex items-center justify-between mb-4 text-sm'>
-            <p>{items.length === 0 ? 'No products found' : `Showing ${start + 1}–${start + visible.length} of ${items.length} products`}</p>
+            <p>{loading ? 'Loading products…' : items.length === 0 ? 'No products found' : `Showing ${start + 1}–${start + visible.length} of ${items.length} products`}</p>
             <div className='flex gap-1'>
               <button onClick={() => setList(false)} aria-label='Grid view' className={`w-8 h-8 rounded-lg cursor-pointer ${!list ? 'bg-lilac text-plum' : 'text-gray-400'}`}><i className='fa-solid fa-table-cells-large'></i></button>
               <button onClick={() => setList(true)} aria-label='List view' className={`w-8 h-8 rounded-lg cursor-pointer ${list ? 'bg-lilac text-plum' : 'text-gray-400'}`}><i className='fa-solid fa-list'></i></button>
             </div>
           </div>
 
+          {error && <p className='text-center text-primary font-semibold py-8'>{error}</p>}
+          {!loading && !error && items.length === 0 && (
+            <div className='text-center py-12'>
+              <i className='fa-solid fa-box-open text-4xl text-blush'></i>
+              <p className='mt-3 text-sm text-gray-500'>No products match your filters.</p>
+              {(cats.length > 0 || prices.length > 0) && (
+                <button onClick={() => { setCats([]); setPrices([]); setPage(1) }} className='mt-3 px-5 py-2 rounded-full bg-lilac text-plum text-sm font-bold cursor-pointer'>Clear filters</button>
+              )}
+            </div>
+          )}
+
           <div className={list ? 'grid grid-cols-1 sm:grid-cols-2 gap-4' : 'grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4'}>
-            {visible.map((p) => <ProductCard key={p.id} product={p} />)}
+            {visible.map((p) => <ProductCard key={p._id} product={p} />)}
           </div>
 
           {/* Pagination */}
@@ -122,7 +158,7 @@ const Shop = () => {
         </div>
       </div>
 
-      <ContactBanner title='Need Help Choosing?' text='Our baby product experts are here to help!' image={assets.products.elephantTeether} />
+      <ContactBanner title='Need Help Choosing?' text='Our baby product experts are here to help!' image={assets.products.teetherElephant} />
     </div>
   )
 }

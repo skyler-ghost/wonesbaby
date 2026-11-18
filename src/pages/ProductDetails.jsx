@@ -2,8 +2,11 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import StarRating from '../components/StarRating'
 import ContactBanner from '../components/ContactBanner'
-import { assets, allProducts, categoryInfo, currency } from '../assets/assets'
+import { assets } from '../assets/assets'
 import { useCart } from '../context/CartContext'
+import { useStore } from '../context/StoreContext'
+import { useApi } from '../lib/useApi'
+import { imageUrl } from '../lib/api'
 
 const highlights = [
   { icon: 'fa-shield-halved', label: 'Safe & Non-Toxic' },
@@ -21,7 +24,9 @@ const tabs = [
 const ProductDetails = () => {
   const { id } = useParams()
   const { addToCart } = useCart()
-  const product = allProducts.find((p) => p.id === Number(id))
+  const { money } = useStore()
+  const { data, loading, error, status } = useApi(`/api/products/${id}`)
+  const product = data?.product
 
   const [active, setActive] = useState(0)
   const [qty, setQty] = useState(1)
@@ -30,19 +35,27 @@ const ProductDetails = () => {
   const [zoom, setZoom] = useState(false)
   const [added, setAdded] = useState(false)
 
+  if (loading) {
+    return <p className='px-4 py-20 text-center text-sm text-gray-500'>Loading product…</p>
+  }
+
   if (!product) {
     return (
       <div className='px-4 py-20 text-center'>
-        <p className='font-baloo text-2xl font-bold text-plum'>Product not found</p>
+        <p className='font-baloo text-2xl font-bold text-plum'>{status === 404 || status === 400 ? 'Product not found' : 'Something went wrong'}</p>
+        {error && status !== 404 && status !== 400 && <p className='text-sm text-gray-500 mt-1'>{error}</p>}
         <Link to='/shop' className='inline-block mt-4 px-6 py-2 rounded-full bg-primary text-white font-bold'>Back to Shop</Link>
       </div>
     )
   }
 
-  // Gallery: this product's photo first, then other photos from the same category
-  const gallery = [product.image, ...allProducts.filter((p) => p.category === product.category && p.id !== product.id).map((p) => p.image)].slice(0, 4)
-
-  const save = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0
+  const gallery = product.images.map(imageUrl)
+  const onSale = product.oldPrice > product.price
+  const save = onSale ? Math.round((1 - product.price / product.oldPrice) * 100) : 0
+  const soldOut = product.stock <= 0
+  const lowStock = !soldOut && product.stock <= 5
+  const maxQty = Math.min(99, Math.max(1, product.stock))
+  const description = product.description || `The ${product.name} is a safe, soft and BPA-free silicone product made for little ones.`
 
   const handleAdd = () => {
     addToCart(product, qty)
@@ -64,19 +77,19 @@ const ProductDetails = () => {
         {/* Gallery */}
         <div className='min-w-0'>
           <div className='relative overflow-hidden rounded-3xl bg-peach/40'>
-            <img src={gallery[active]} alt={product.name} onClick={() => setZoom(!zoom)} className={`w-full aspect-square object-cover transition-transform duration-300 cursor-zoom-in ${zoom ? 'scale-150 cursor-zoom-out' : ''}`} />
-            <p className='absolute top-4 left-4 px-4 py-1.5 rounded-full bg-primary text-white text-xs font-bold'>In Stock</p>
+            <img src={gallery[active] || ''} alt={product.name} onClick={() => setZoom(!zoom)} className={`w-full aspect-square object-cover transition-transform duration-300 cursor-zoom-in ${zoom ? 'scale-150 cursor-zoom-out' : ''}`} />
+            <p className={`absolute top-4 left-4 px-4 py-1.5 rounded-full text-white text-xs font-bold ${soldOut ? 'bg-gray-500' : 'bg-primary'}`}>{soldOut ? 'Out of Stock' : lowStock ? `Only ${product.stock} left` : 'In Stock'}</p>
             <button onClick={() => setZoom(!zoom)} aria-label='Zoom' className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white shadow text-plum cursor-pointer'>
               <i className='fa-solid fa-magnifying-glass-plus'></i>
             </button>
           </div>
-          <div className='grid grid-cols-4 gap-3 mt-3'>
+          {gallery.length > 1 && <div className='grid grid-cols-4 gap-3 mt-3'>
             {gallery.map((img, i) => (
               <button key={i} onClick={() => { setActive(i); setZoom(false) }} className={`rounded-xl overflow-hidden border-2 cursor-pointer ${active === i ? 'border-primary' : 'border-transparent'}`}>
                 <img src={img} alt='' className='w-full aspect-square object-cover' />
               </button>
             ))}
-          </div>
+          </div>}
         </div>
 
         {/* Details */}
@@ -88,24 +101,24 @@ const ProductDetails = () => {
             </button>
           </div>
 
-          <div className='flex items-center gap-2 mt-2'>
-            <StarRating rating={product.rating} />
-            <span className='text-sm text-gray-700'>{product.rating} ({product.reviews} reviews)</span>
-          </div>
+          {product.reviews > 0 && (
+            <div className='flex items-center gap-2 mt-2'>
+              <StarRating rating={product.rating} />
+              <span className='text-sm text-gray-700'>{product.rating} ({product.reviews} reviews)</span>
+            </div>
+          )}
 
           <p className='mt-4 flex flex-wrap items-center gap-3'>
-            <span className='font-baloo text-3xl md:text-4xl font-bold text-primary'>{currency}{product.price.toFixed(2)}</span>
-            {product.oldPrice && (
+            <span className='font-baloo text-3xl md:text-4xl font-bold text-primary'>{money(product.price)}</span>
+            {onSale && (
               <>
-                <span className='text-gray-500 line-through'>{currency}{product.oldPrice}</span>
+                <span className='text-gray-500 line-through'>{money(product.oldPrice)}</span>
                 <span className='px-3 py-1 rounded-full bg-blush text-primary text-xs font-bold'>Save {save}%</span>
               </>
             )}
           </p>
 
-          <p className='mt-4 text-sm md:text-base text-gray-700 max-w-xl'>
-            The <b>{product.name}</b> {categoryInfo[product.category]}
-          </p>
+          <p className='mt-4 text-sm md:text-base text-gray-700 max-w-xl'>{description}</p>
 
           {/* Highlights */}
           <div className='grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5'>
@@ -123,10 +136,10 @@ const ProductDetails = () => {
             <div className='flex items-center gap-4 rounded-full border-2 border-blush px-2 py-1'>
               <button onClick={() => setQty(Math.max(1, qty - 1))} aria-label='Decrease' className='w-8 h-8 rounded-full bg-blush text-plum cursor-pointer'><i className='fa-solid fa-minus text-xs'></i></button>
               <span className='w-4 text-center font-bold'>{qty}</span>
-              <button onClick={() => setQty(qty + 1)} aria-label='Increase' className='w-8 h-8 rounded-full bg-blush text-plum cursor-pointer'><i className='fa-solid fa-plus text-xs'></i></button>
+              <button onClick={() => setQty(Math.min(maxQty, qty + 1))} aria-label='Increase' className='w-8 h-8 rounded-full bg-blush text-plum cursor-pointer'><i className='fa-solid fa-plus text-xs'></i></button>
             </div>
-            <button onClick={handleAdd} className='flex-1 min-w-[180px] py-3 rounded-full bg-primary hover:bg-primary-dark text-white font-bold text-lg shadow-lg shadow-primary/30 transition-all cursor-pointer'>
-              <i className='fa-solid fa-cart-shopping mr-2'></i>{added ? 'Added!' : 'Add to Cart'}
+            <button onClick={handleAdd} disabled={soldOut} className='flex-1 min-w-[180px] py-3 rounded-full bg-primary hover:bg-primary-dark text-white font-bold text-lg shadow-lg shadow-primary/30 transition-all cursor-pointer disabled:bg-gray-300 disabled:shadow-none disabled:cursor-not-allowed'>
+              <i className='fa-solid fa-cart-shopping mr-2'></i>{soldOut ? 'Out of Stock' : added ? 'Added!' : 'Add to Cart'}
             </button>
           </div>
 
@@ -135,7 +148,7 @@ const ProductDetails = () => {
           </button>
 
           <div className='flex flex-wrap gap-x-10 gap-y-2 mt-5 text-sm'>
-            <p><i className='fa-solid fa-location-dot text-plum mr-2'></i><b className='text-plum'>Availability:</b> <span className='text-leaf font-semibold'>● In Stock</span></p>
+            <p><i className='fa-solid fa-location-dot text-plum mr-2'></i><b className='text-plum'>Availability:</b> {soldOut ? <span className='text-gray-500 font-semibold'>● Out of Stock</span> : <span className='text-leaf font-semibold'>● In Stock</span>}</p>
             <p><i className='fa-solid fa-truck-fast text-leaf mr-2'></i><b className='text-plum'>Estimated Delivery:</b> 2 – 5 Business Days</p>
           </div>
 
@@ -145,16 +158,18 @@ const ProductDetails = () => {
               {tabs.map((t) => (
                 <button key={t.key} onClick={() => setTab(t.key)} className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold cursor-pointer ${tab === t.key ? 'bg-plum text-white' : 'text-plum'}`}>
                   <i className={`fa-regular ${t.icon}`}></i>
-                  {t.label}{t.key === 'reviews' && ` (${product.reviews})`}
+                  {t.label}{t.key === 'reviews' && product.reviews > 0 && ` (${product.reviews})`}
                 </button>
               ))}
             </div>
             <div className='mt-3 px-2 text-sm text-gray-700'>
               {tab === 'description' && (
-                <p>The {product.name} {categoryInfo[product.category]}</p>
+                <p>{description}</p>
               )}
               {tab === 'reviews' && (
-                <p className='flex items-center gap-2'><StarRating rating={product.rating} /> {product.rating} out of 5, based on {product.reviews} reviews.</p>
+                product.reviews > 0
+                  ? <p className='flex items-center gap-2'><StarRating rating={product.rating} /> {product.rating} out of 5, based on {product.reviews} reviews.</p>
+                  : <p>No reviews yet.</p>
               )}
               {tab === 'shipping' && (
                 <p>Orders are delivered within 2 – 5 business days. Local pickup is available in Surulere, Lagos and Gonin-Gora, Kaduna. If something isn't right with your order, contact us and we'll help with a return or exchange.</p>

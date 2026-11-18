@@ -100,7 +100,6 @@ export const categories = [
   { name: "Toys & Play", image: assets.categories.toysPlay },
   { name: "On The Go", image: assets.categories.onTheGo },
 ];
-export const currency = "$";
 export const navLinks = [
   { name: "Home", path: "/" },
   { name: "Shop", path: "/shop" },
@@ -108,145 +107,6 @@ export const navLinks = [
   { name: "FAQ", path: "/faq" },
   { name: "Contact", path: "/contact" },
 ];
-// Shop page data (images are reused placeholders until you add more photos)
-export const shopCategories = ["Teethers", "Feeding"];
-
-export const categoryInfo = {
-  Teethers:
-    "is made from 100% food-grade silicone, BPA-free, and designed to be soft, safe and easy for little hands to hold. Its grip-friendly design helps with hand-eye coordination, fine motor skill development and provides relief for teething gums.",
-
-  Feeding:
-    "is made from soft, flexible, food-grade silicone that is BPA-free, non-toxic and gentle on your baby. Its easy-grip shape makes feeding time simpler for both baby and parent, and it is easy to clean after every use.",
-};
-
-export const priceRanges = [
-  { label: "Under $25", min: 0, max: 25 },
-  { label: "$25 – ₦40", min: 25, max: 40 },
-  { label: "$40+", min: 40, max: Infinity },
-];
-export const allProducts = [
-  {
-    id: 1,
-    name: "Silicone Elephant Teether (Blue)",
-    category: "Teethers",
-    image: assets.products.teetherElephant,
-    rating: 4.5,
-    reviews: 124,
-    price: 15,
-    oldPrice: 19.99,
-    sale: true,
-  },
-  {
-    id: 2,
-    name: "Silicone Cat Teether (Pink)",
-    category: "Teethers",
-    image: assets.products.teetherCat,
-    rating: 4.5,
-    reviews: 98,
-    price: 15,
-  },
-  {
-    id: 3,
-    name: "Silicone Bear Teether (Black)",
-    category: "Teethers",
-    image: assets.products.teetherBear,
-    rating: 4,
-    reviews: 76,
-    price: 15,
-  },
-  {
-    id: 4,
-    name: "Silicone Baby Bottle (Green)",
-    category: "Feeding",
-    image: assets.products.bottle1,
-    rating: 4.5,
-    reviews: 86,
-    price: 32,
-  },
-  {
-    id: 5,
-    name: "Baby Bottle Set with Straw (Pink & Green)",
-    category: "Feeding",
-    image: assets.products.bottle2,
-    rating: 4.5,
-    reviews: 64,
-    price: 45,
-  },
-  {
-    id: 6,
-    name: "Silicone Bottle with Straw Kit (Green)",
-    category: "Feeding",
-    image: assets.products.bottle3,
-    rating: 4,
-    reviews: 52,
-    price: 38,
-  },
-  {
-    id: 7,
-    name: "Silicone Baby Bottle (Pink)",
-    category: "Feeding",
-    image: assets.products.bottle4,
-    rating: 4.5,
-    reviews: 92,
-    price: 32,
-  },
-  {
-    id: 8,
-    name: "Wide-Neck Baby Bottle (Pink)",
-    category: "Feeding",
-    image: assets.products.bottle6,
-    rating: 4,
-    reviews: 71,
-    price: 34,
-  },
-  {
-    id: 9,
-    name: "Silicone Baby Bottle Duo (Green)",
-    category: "Feeding",
-    image: assets.products.bottle7,
-    rating: 4,
-    reviews: 48,
-    price: 40,
-  },
-  {
-    id: 10,
-    name: "Silicone Baby Bottle with Cap (Pink)",
-    category: "Feeding",
-    image: assets.products.bottle8,
-    rating: 4,
-    reviews: 67,
-    price: 33,
-  },
-  {
-    id: 11,
-    name: "Baby Bottle Twin Pack (Pink & Green)",
-    category: "Feeding",
-    image: assets.products.bottle9,
-    rating: 4.5,
-    reviews: 59,
-    price: 58,
-  },
-  {
-    id: 12,
-    name: "Bottle & Accessories Set (Pink)",
-    category: "Feeding",
-    image: assets.products.bottle10,
-    rating: 4.5,
-    reviews: 41,
-    price: 52,
-  },
-  {
-    id: 13,
-    name: "Silicone Baby Bottle Pair (Green & Pink)",
-    category: "Feeding",
-    image: assets.products.bottle11,
-    rating: 4,
-    reviews: 38,
-    price: 56,
-  },
-];
-// Home page featured products
-export const products = allProducts.slice(0, 5);
 export const faqTopics = [
   { name: "General", icon: "fa-house" },
   { name: "Orders", icon: "fa-box" },
@@ -331,89 +191,6 @@ export const promises = [
   },
 ];
 
-export const adminNav = [
-  { name: "Dashboard", icon: "fa-house", active: true },
-  { name: "Products", icon: "fa-box" },
-  { name: "Orders", icon: "fa-cart-shopping", badge: 12 },
-  { name: "Customers", icon: "fa-users" },
-  { name: "Coupons", icon: "fa-tags" },
-  { name: "Settings", icon: "fa-gear" },
-];
-export const adminStats = [
-  {
-    label: "Total Orders",
-    value: "124",
-    change: "+12%",
-    icon: "fa-cart-shopping",
-    bg: "bg-blush",
-    color: "text-primary",
-  },
-  {
-    label: "Total Customers",
-    value: "1,850",
-    change: "+8%",
-    icon: "fa-users",
-    bg: "bg-mint",
-    color: "text-leaf",
-  },
-  {
-    label: "Total Revenue",
-    value: "₦563,200",
-    change: "+15%",
-    icon: "fa-wallet",
-    bg: "bg-lilac",
-    color: "text-plum",
-  },
-  {
-    label: "Total Products",
-    value: String(allProducts.length),
-    change: "+2%",
-    icon: "fa-box",
-    bg: "bg-sunny",
-    color: "text-orange-400",
-  },
-];
-
-export const adminSales = [
-  { month: "Jan", value: 52 },
-  { month: "Feb", value: 90 },
-  { month: "Mar", value: 70 },
-  { month: "Apr", value: 130 },
-  { month: "May", value: 108 },
-  { month: "Jun", value: 150 },
-];
-
-export const adminOrders = [
-  {
-    id: "#00124",
-    customer: "Adebayo T.",
-    amount: 39,
-    status: "Pending",
-    date: "2h ago",
-  },
-  {
-    id: "#00123",
-    customer: "Funmi A.",
-    amount: 61,
-    status: "Delivered",
-    date: "1d ago",
-  },
-  {
-    id: "#00122",
-    customer: "Tunde K.",
-    amount: 22,
-    status: "Processing",
-    date: "2d ago",
-  },
-];
-
-export const adminActions = [
-  { name: "Add Product", icon: "fa-cube" },
-  { name: "View Orders", icon: "fa-cart-shopping" },
-  { name: "Manage Products", icon: "fa-tag" },
-  { name: "View Customers", icon: "fa-users" },
-];
-
 export const footerLinks = {
   quick: [
     { name: "Home", path: "/" },
@@ -421,6 +198,7 @@ export const footerLinks = {
     { name: "About", path: "/about" },
     { name: "FAQ", path: "/faq" },
     { name: "Contact", path: "/contact" },
+    { name: "Track Order", path: "/track" },
   ],
   care: ["Shipping & Returns", "Privacy Policy", "Terms & Conditions"],
 };

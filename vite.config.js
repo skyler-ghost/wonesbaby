@@ -10,5 +10,8 @@ export default defineConfig({
       '/api': 'http://localhost:5000',
       '/uploads': 'http://localhost:5000',
     },
+    watch: {
+      ignored: ['**/server/uploads/**'], // Or ignore the entire '**/server/**' folder
+    },
   },
 })

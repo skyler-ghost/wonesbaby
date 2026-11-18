@@ -1,9 +1,10 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero'
-import { assets, currency } from '../assets/assets'
+import { assets } from '../assets/assets'
 import { useCart } from '../context/CartContext'
-
-const money = (n) => `${currency}${n.toFixed(2)}`
+import { useStore } from '../context/StoreContext'
+import { imageUrl } from '../lib/api'
 
 const Qty = ({ qty, onChange }) => (
   <div className='inline-flex items-center gap-3 rounded-full border-2 border-blush px-1.5 py-0.5'>
@@ -14,15 +15,11 @@ const Qty = ({ qty, onChange }) => (
 )
 
 const Cart = () => {
-  const { cartItems, subtotal, updateQty, removeItem, clearCart } = useCart()
+  const { cartItems, subtotal, shipping, total, updateQty, removeItem, syncCart } = useCart()
+  const { money } = useStore()
 
-  // No checkout page yet: opens an email with the order details
-  const checkout = () => {
-    const lines = cartItems.map((i) => `${i.qty} x ${i.product.name} - ${money(i.qty * i.product.price)}`).join('\n')
-    const body = encodeURIComponent(`Hello Wones Baby, I'd like to order:\n\n${lines}\n\nTotal: ${money(subtotal)}`)
-    window.location.href = `mailto:wonesbaby@gmail.com?subject=${encodeURIComponent('New order')}&body=${body}`
-    clearCart()
-  }
+  // Make sure prices and stock shown here match the database
+  useEffect(() => { syncCart() }, [syncCart])
 
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-24 pb-10'>
@@ -55,10 +52,12 @@ const Cart = () => {
                   {/* Desktop row */}
                   <div className='hidden md:grid grid-cols-[2.2fr_0.9fr_1.5fr_1fr_0.5fr] gap-2 items-center px-3'>
                     <div className='flex items-center gap-3'>
-                      <img src={product.image} alt={product.name} className='w-20 h-16 rounded-xl object-cover' />
+                      <img src={imageUrl(product.image)} alt={product.name} className='w-20 h-16 rounded-xl object-cover' />
                       <div>
                         <Link to={`/product/${product.id}`} className='text-sm font-bold text-gray-800 hover:text-primary'>{product.name}</Link>
                         <p className='text-xs text-gray-500'>{product.category} • Safe • BPA Free</p>
+                        {product.stock > 0 && product.stock <= 5 && <p className='text-xs text-primary font-semibold'>Only {product.stock} left</p>}
+                        {product.stock <= 0 && <p className='text-xs text-primary font-semibold'>Out of stock</p>}
                       </div>
                     </div>
                     <p className='font-bold text-gray-800'>{money(product.price)}</p>
@@ -69,7 +68,7 @@ const Cart = () => {
 
                   {/* Mobile row */}
                   <div className='md:hidden flex items-center gap-3'>
-                    <img src={product.image} alt={product.name} className='w-20 h-20 rounded-xl object-cover' />
+                    <img src={imageUrl(product.image)} alt={product.name} className='w-20 h-20 rounded-xl object-cover' />
                     <div className='flex-1 min-w-0'>
                       <Link to={`/product/${product.id}`} className='text-sm font-bold text-gray-800 leading-tight block'>{product.name}</Link>
                       <p className='text-sm font-bold text-gray-800 mt-0.5'>{money(product.price)}</p>
@@ -87,9 +86,9 @@ const Cart = () => {
             <div className='flex flex-wrap items-center justify-between gap-4 mt-5'>
               <Link to='/shop' className='font-bold text-plum text-sm'><i className='fa-solid fa-arrow-left mr-2'></i>Continue Shopping</Link>
               <p className='hidden md:block text-sm'>Subtotal: <span className='font-baloo text-2xl font-bold text-primary ml-1'>{money(subtotal)}</span></p>
-              <button onClick={checkout} className='hidden md:inline-flex items-center gap-2 px-7 py-3 rounded-full bg-primary hover:bg-primary-dark text-white font-bold transition-all cursor-pointer'>
+              <Link to='/checkout' className='hidden md:inline-flex items-center gap-2 px-7 py-3 rounded-full bg-primary hover:bg-primary-dark text-white font-bold transition-all'>
                 <i className='fa-solid fa-lock text-sm'></i> Proceed to Checkout <i className='fa-solid fa-arrow-right text-sm'></i>
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -98,14 +97,14 @@ const Cart = () => {
             <h2 className='font-baloo text-xl md:text-2xl font-bold text-plum'>Order Summary</h2>
             <div className='mt-4 space-y-2 text-sm'>
               <p className='flex justify-between'><span>Subtotal</span><b>{money(subtotal)}</b></p>
-              <p className='flex justify-between'><span>Shipping</span><b>Free</b></p>
+              <p className='flex justify-between'><span>Shipping</span><b>{shipping > 0 ? money(shipping) : 'Free'}</b></p>
             </div>
             <p className='flex justify-between items-baseline mt-4 pt-3 border-t border-white font-baloo text-plum'>
-              <span className='text-xl font-bold'>Total</span><span className='text-2xl font-bold'>{money(subtotal)}</span>
+              <span className='text-xl font-bold'>Total</span><span className='text-2xl font-bold'>{money(total)}</span>
             </p>
-            <button onClick={checkout} className='md:hidden w-full mt-4 py-3 rounded-full bg-primary text-white font-bold cursor-pointer'>
+            <Link to='/checkout' className='md:hidden block text-center w-full mt-4 py-3 rounded-full bg-primary text-white font-bold'>
               <i className='fa-solid fa-lock mr-2 text-sm'></i>Proceed to Checkout <i className='fa-solid fa-arrow-right ml-1 text-sm'></i>
-            </button>
+            </Link>
             <div className='flex items-center gap-3 mt-5 text-plum'>
               <i className='fa-solid fa-shield-halved text-3xl'></i>
               <div>

@@ -30,6 +30,13 @@ const products = [
   { name: 'Silicone Baby Bottle Pair (Green & Pink)', category: 'Feeding', image: 'feeding-11.jpeg', rating: 4, reviews: 38, price: 56 },
 ]
 
+const descriptions = {
+  Teethers:
+    'Made from 100% food-grade silicone, BPA-free, and designed to be soft, safe and easy for little hands to hold. Its grip-friendly design helps with hand-eye coordination, fine motor skill development and provides relief for teething gums.',
+  Feeding:
+    'Made from soft, flexible, food-grade silicone that is BPA-free, non-toxic and gentle on your baby. Its easy-grip shape makes feeding time simpler for both baby and parent, and it is easy to clean after every use.',
+}
+
 const run = async () => {
   await mongoose.connect(env.mongoUri)
 
@@ -44,7 +51,7 @@ const run = async () => {
   const docs = []
   for (const { image, ...rest } of products) {
     await fs.copyFile(path.join(imagesDir, image), path.join(uploadsDir, image))
-    docs.push({ ...rest, images: [`/uploads/${image}`], stock: 50, description: '' })
+    docs.push({ ...rest, images: [`/uploads/${image}`], stock: 50, description: descriptions[rest.category] || '' })
   }
 
   await Product.insertMany(docs)

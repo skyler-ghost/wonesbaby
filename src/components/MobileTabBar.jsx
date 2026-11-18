@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import Cart from '../pages/Cart'
 
 const MobileTabBar = () => {
   const { count } = useCart()
@@ -14,9 +13,9 @@ const MobileTabBar = () => {
       <NavLink to='/shop' className={tab}><i className='fa-solid fa-bag-shopping text-lg'></i>Shop</NavLink>
       <NavLink to={'/cart'} className={(s) =>`relative ${tab(s)}`}>
         <i className='fa-solid fa-cart-shopping text-lg'></i>Cart
-        <span>{count}</span>
+        {count > 0 && <span className='absolute top-0 left-1/2 ml-1 min-w-4 h-4 px-1 rounded-full bg-amber-400 text-white text-[9px] flex items-center justify-center'>{count}</span>}
       </NavLink>
-      <button className='flex flex-col items-center gap-1 text-[11px] font-semibold text-gray-600'><i className='fa-regular fa-user text-lg'></i>Account</button>
+      <NavLink to='/track' className={tab}><i className='fa-solid fa-truck-fast text-lg'></i>Track</NavLink>
     </div>
   )
 }

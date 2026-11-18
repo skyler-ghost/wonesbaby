@@ -43,7 +43,7 @@ const Navbar = () => {
         ))}
         <Link to={'/cart'} className='relative ml-1 text-lg md:text-xl text-gray-700 hover:text-primary cursor-pointer' aria-label='Cart'>
           <i className='fa-solid fa-cart-shopping'></i>
-          <span className='absolute -top-2 -right-2 w-4 h-4 rounded-full bg-amber-400 text-white text-[9px] flex items-center justify-center'>{count}</span>
+          {count > 0 && <span className='absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-amber-400 text-white text-[9px] flex items-center justify-center'>{count}</span>}
         </Link>
         <span className='h-6 w-px bg-gray-300 mx-1 lg:hidden'></span>
         <button onClick={() => setOpen(!open)} className='lg:hidden text-xl text-gray-700 cursor-pointer' aria-label='Menu'>
