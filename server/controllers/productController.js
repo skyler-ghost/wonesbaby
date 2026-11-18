@@ -5,7 +5,7 @@ import { uploadsDir } from '../middleware/uploadMiddleware.js'
 import { asyncHandler, HttpError } from '../middleware/errorHandler.js'
 
 const SORTS = {
-  newest: '-createdAt',
+  newest: 'createdAt',
   'price-asc': 'price',
   'price-desc': '-price',
   rating: '-rating',
