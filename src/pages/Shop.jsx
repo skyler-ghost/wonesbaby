@@ -19,6 +19,23 @@ const categoryImages = {
   'On The Go': assets.categories.onTheGo,
 }
 
+// Splits the catalogue into three bands (low / middle / high) at round numbers near where the real prices sit
+const buildPriceRanges = (prices, fmt) => {
+  const sorted = prices.filter((p) => p > 0).sort((a, b) => a - b)
+  if (sorted.length === 0) return []
+  const round = (n) => {
+    const pow = 10 ** Math.max(0, Math.floor(Math.log10(n)))
+    return Math.max(pow, Math.round(n / pow) * pow)
+  }
+  const t1 = round(sorted[Math.floor(sorted.length / 3)])
+  const t2 = Math.max(round(sorted[Math.floor((sorted.length * 2) / 3)]), t1 + t1 / 2)
+  return [
+    { label: `Under ${fmt(t1)}`, min: 0, max: t1 },
+    { label: `${fmt(t1)} – ${fmt(t2)}`, min: t1, max: t2 },
+    { label: `${fmt(t2)}+`, min: t2, max: Infinity },
+  ]
+}
+
 const Shop = () => {
   const { money } = useStore()
   const [params] = useSearchParams()
@@ -26,11 +43,8 @@ const Shop = () => {
   const allProducts = data?.products || []
   const shopCategories = [...new Set(allProducts.map((p) => p.category))].sort()
 
-  const priceRanges = [
-    { label: `Under ${money(25)}`, min: 0, max: 25 },
-    { label: `${money(25)} – ${money(40)}`, min: 25, max: 40 },
-    { label: `${money(40)}+`, min: 40, max: Infinity },
-  ]
+  // Price bands are worked out from the real prices, so they suit any currency (dollars or naira)
+  const priceRanges = buildPriceRanges(allProducts.map((p) => p.price), (n) => money(n).replace(/\.00$/, ''))
 
   const [cats, setCats] = useState(() => (params.get('category') ? [params.get('category')] : []))
   const [prices, setPrices] = useState([])

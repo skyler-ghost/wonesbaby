@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import StarRating from '../components/StarRating'
 import ContactBanner from '../components/ContactBanner'
@@ -27,6 +27,8 @@ const ProductDetails = () => {
   const { money } = useStore()
   const { data, loading, error, status } = useApi(`/api/products/${id}`)
   const product = data?.product
+  // Other products in the same category (other colours / styles of the same kind of item)
+  const related = useApi(product ? `/api/products?category=${encodeURIComponent(product.category)}&limit=12` : null)
 
   const [active, setActive] = useState(0)
   const [qty, setQty] = useState(1)
@@ -34,6 +36,9 @@ const ProductDetails = () => {
   const [wish, setWish] = useState(false)
   const [zoom, setZoom] = useState(false)
   const [added, setAdded] = useState(false)
+
+  // Moving to another product (e.g. from the options row): start fresh
+  useEffect(() => { setActive(0); setQty(1); setZoom(false); setTab('description') }, [id])
 
   if (loading) {
     return <p className='px-4 py-20 text-center text-sm text-gray-500'>Loading product…</p>
@@ -55,6 +60,7 @@ const ProductDetails = () => {
   const soldOut = product.stock <= 0
   const lowStock = !soldOut && product.stock <= 5
   const maxQty = Math.min(99, Math.max(1, product.stock))
+  const options = (related.data?.products || []).filter((p) => p._id !== product._id).slice(0, 10)
   const description = product.description || `The ${product.name} is a safe, soft and BPA-free silicone product made for little ones.`
 
   const handleAdd = () => {
@@ -90,6 +96,21 @@ const ProductDetails = () => {
               </button>
             ))}
           </div>}
+
+          {/* Other options / colours: links to the other products in this category */}
+          {options.length > 0 && (
+            <div className='mt-5'>
+              <p className='text-sm font-bold text-plum mb-2'>Other options &amp; colours</p>
+              <div className='grid grid-cols-4 sm:grid-cols-5 gap-3'>
+                {options.map((o) => (
+                  <Link key={o._id} to={`/product/${o._id}`} title={o.name} className='group'>
+                    <img src={imageUrl(o.images[0])} alt={o.name} className='w-full aspect-square object-cover rounded-xl border-2 border-transparent group-hover:border-primary transition-all' />
+                    <p className='mt-1 text-[10px] leading-tight text-gray-600 line-clamp-2'>{o.name}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Details */}

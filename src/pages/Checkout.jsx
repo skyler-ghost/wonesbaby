@@ -11,7 +11,8 @@ const empty = { email: '', fullName: '', phone: '', address: '', city: '', state
 
 const Checkout = () => {
   const { cartItems, subtotal, shipping, total, clearCart, syncCart } = useCart()
-  const { money } = useStore()
+  const { money, paymentProvider } = useStore()
+  const card = paymentProvider === 'stripe'
   const [form, setForm] = useState(empty)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -131,8 +132,13 @@ const Checkout = () => {
           </p>
           {error && <p className='mt-3 text-sm font-semibold text-red-600 bg-white/70 rounded-xl px-3 py-2'>{error}</p>}
           <button type='submit' disabled={busy} className='w-full mt-4 py-3 rounded-full bg-primary hover:bg-primary-dark disabled:opacity-60 text-white font-bold cursor-pointer transition-all'>
-            <i className='fa-solid fa-lock mr-2 text-sm'></i>{busy ? 'Placing order…' : 'Place Order'}
+            <i className={`fa-solid ${card ? 'fa-credit-card' : 'fa-lock'} mr-2 text-sm`}></i>{busy ? 'Please wait…' : card ? 'Pay with Card' : 'Place Order'}
           </button>
+          <p className='mt-2 text-center text-xs text-gray-600'>
+            {card
+              ? <><i className='fa-brands fa-stripe text-lg align-middle mr-1'></i>You'll pay securely on Stripe's payment page next.</>
+              : "We'll contact you with payment details after you place your order."}
+          </p>
           <Link to='/cart' className='block text-center mt-3 text-sm font-bold text-plum'><i className='fa-solid fa-arrow-left mr-2'></i>Back to cart</Link>
         </aside>
       </form>

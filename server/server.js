@@ -45,11 +45,25 @@ app.use('/api/products', productRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/payments', paymentRoutes)
 
-// In production, serve the built React app from the same server
+// Serve the built React app (the dist/ folder created by `npm run build`) from this same server.
+// It is served whenever the build exists, so it cannot be silently skipped by a missing NODE_ENV.
 const dist = path.join(__dirname, '..', 'dist')
-if (env.nodeEnv === 'production' && fs.existsSync(dist)) {
+const hasBuild = fs.existsSync(path.join(dist, 'index.html'))
+if (hasBuild) {
   app.use(express.static(dist))
   app.get(/^(?!\/(api|uploads)\/).*/, (req, res) => res.sendFile(path.join(dist, 'index.html')))
+} else {
+  // Visible explanation instead of a confusing 404 when the build step did not run
+  app.get(/^(?!\/(api|uploads)\/).*/, (req, res) =>
+    res
+      .status(503)
+      .type('text/plain')
+      .send(
+        'The API is running, but the website has not been built (no dist folder).\n' +
+          'On Render set Build Command to:  npm install --include=dev && npm run build\n' +
+          'and Start Command to:  npm start'
+      )
+  )
 }
 
 app.use(notFound)
@@ -70,7 +84,12 @@ const start = async () => {
   await connectDB()
   await ensureOwnerAdmin()
   startOrderCleanup()
-  app.listen(env.port, () => console.log(`Server running on http://localhost:${env.port}`))
+  app.listen(env.port, () => {
+    console.log(`Server running on port ${env.port} (NODE_ENV=${env.nodeEnv})`)
+    console.log(hasBuild ? 'Website: serving the built site from dist/' : 'WARNING: dist/ not found. API only, the build step did not run.')
+    console.log(`Image storage: ${env.cloudinaryUrl ? 'Cloudinary' : 'LOCAL DISK (images will be lost on Render!)'}`)
+    console.log(`Payments: ${env.paymentProvider}${env.paymentProvider === 'stripe' && !env.paymentSecretKey ? ' (WARNING: PAYMENT_SECRET_KEY missing)' : ''}`)
+  })
 }
 
 start()
