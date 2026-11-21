@@ -7,7 +7,7 @@ import { useStore } from '../context/StoreContext'
 import { api, imageUrl } from '../lib/api'
 
 const input = 'w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm outline-none focus:border-primary'
-const empty = { email: '', fullName: '', phone: '', address: '', city: '', state: '', postalCode: '', country: 'Nigeria' }
+const empty = { email: '', fullName: '', phone: '', address: '', city: '', state: '', postalCode: '', country: '' }
 
 const Checkout = () => {
   const { cartItems, subtotal, shipping, total, clearCart, syncCart } = useCart()
@@ -38,11 +38,12 @@ const Checkout = () => {
 
       // Start the payment. "manual" has no gateway page; a real gateway returns a URL to send the customer to.
       let paymentUrl = null
+      let paymentFailed = false
       try {
         const pay = await api('/api/payments/initiate', { method: 'POST', body: { orderNumber: order.orderNumber, email } })
         paymentUrl = pay.paymentUrl
       } catch {
-        /* the order exists; the customer can still pay later using their order number */
+        paymentFailed = true // the order exists; the customer can pay from the Track Order page
       }
 
       clearCart()
@@ -50,7 +51,7 @@ const Checkout = () => {
         window.location.href = paymentUrl
         return
       }
-      setPlaced({ orderNumber: order.orderNumber, email, total: order.total, currency: order.currency })
+      setPlaced({ orderNumber: order.orderNumber, email, total: order.total, currency: order.currency, paymentFailed })
     } catch (err) {
       setError(err.message)
       syncCart() // stock or prices may have changed
@@ -67,7 +68,11 @@ const Checkout = () => {
         <p className='mt-2 text-gray-700'>Your order number is</p>
         <p className='font-baloo text-2xl font-bold text-primary mt-1 select-all'>{placed.orderNumber}</p>
         <p className='mt-3 text-sm text-gray-600'>We've sent a confirmation to <b>{placed.email}</b>. Keep your order number: you can track your order with it and your email address.</p>
-        <p className='mt-3 text-sm text-gray-600'>We'll contact you with payment details and delivery arrangements.</p>
+        {placed.paymentFailed ? (
+          <p className='mt-3 text-sm font-semibold text-red-600'>We couldn't open the payment page. Your order is saved: use "Track My Order" below and press Pay Now to try again.</p>
+        ) : (
+          <p className='mt-3 text-sm text-gray-600'>We'll contact you with payment details and delivery arrangements.</p>
+        )}
         <div className='flex flex-wrap justify-center gap-3 mt-6'>
           <Link to={`/track?order=${encodeURIComponent(placed.orderNumber)}`} className='px-6 py-3 rounded-full bg-primary hover:bg-primary-dark text-white font-bold transition-all'>Track My Order</Link>
           <Link to='/shop' className='px-6 py-3 rounded-full bg-lilac text-plum font-bold'>Keep Shopping</Link>

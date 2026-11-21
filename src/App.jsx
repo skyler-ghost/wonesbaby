@@ -13,6 +13,7 @@ import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import Track from './pages/Track'
+import PaymentResult from './pages/PaymentResult'
 import Admin from './pages/Admin'
 
 const NotFound = () => (
@@ -49,6 +50,7 @@ const App = () => {
           <Route path='/cart' element={<Cart />} />
           <Route path='/checkout' element={<Checkout />} />
           <Route path='/track' element={<Track />} />
+          <Route path='/payment/result' element={<PaymentResult />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </div>
