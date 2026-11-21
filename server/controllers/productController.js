@@ -1,11 +1,9 @@
-import fs from 'fs/promises'
-import path from 'path'
 import Product from '../models/Product.js'
-import { uploadsDir } from '../middleware/uploadMiddleware.js'
+import { saveImages, deleteImages } from '../services/imageService.js'
 import { asyncHandler, HttpError } from '../middleware/errorHandler.js'
 
 const SORTS = {
-  newest: 'createdAt',
+  newest: '-createdAt',
   'price-asc': 'price',
   'price-desc': '-price',
   rating: '-rating',
@@ -64,16 +62,9 @@ const parseImageList = (value) => {
   }
 }
 
-const removeFiles = (images = []) =>
-  Promise.all(
-    images
-      .filter((img) => img.startsWith('/uploads/'))
-      .map((img) => fs.unlink(path.join(uploadsDir, path.basename(img))).catch(() => {}))
-  )
-
 // POST /api/products  (multipart form, image files under "images")
 export const createProduct = asyncHandler(async (req, res) => {
-  const uploaded = (req.files || []).map((f) => `/uploads/${f.filename}`)
+  const uploaded = await saveImages(req.files)
   const product = await Product.create({ ...pick(req.body), images: uploaded })
   res.status(201).json({ product })
 })
@@ -87,10 +78,10 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
   const keep = parseImageList(req.body.images)
   if (keep) {
-    await removeFiles(product.images.filter((img) => !keep.includes(img)))
+    await deleteImages(product.images.filter((img) => !keep.includes(img)))
     product.images = keep
   }
-  const uploaded = (req.files || []).map((f) => `/uploads/${f.filename}`)
+  const uploaded = await saveImages(req.files)
   product.images.push(...uploaded)
 
   product.set(pick(req.body))
@@ -102,6 +93,6 @@ export const updateProduct = asyncHandler(async (req, res) => {
 export const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findByIdAndDelete(req.params.id)
   if (!product) throw new HttpError(404, 'Product not found')
-  await removeFiles(product.images)
+  await deleteImages(product.images)
   res.json({ message: 'Product deleted' })
 })

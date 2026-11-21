@@ -1,6 +1,5 @@
 import multer from 'multer'
 import path from 'path'
-import crypto from 'crypto'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { HttpError } from './errorHandler.js'
@@ -10,16 +9,12 @@ export const uploadsDir = path.join(__dirname, '..', 'uploads')
 fs.mkdirSync(uploadsDir, { recursive: true })
 
 const allowed = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' }
+export const allowedImageTypes = allowed
 
-const storage = multer.diskStorage({
-  destination: uploadsDir,
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${crypto.randomBytes(6).toString('hex')}${allowed[file.mimetype]}`)
-  },
-})
-
+// Files are held in memory and then handed to imageService, which stores them on
+// Cloudinary (production) or in server/uploads (local development).
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024, files: 6 },
   fileFilter: (req, file, cb) => {
     if (allowed[file.mimetype]) return cb(null, true)

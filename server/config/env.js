@@ -27,6 +27,11 @@ export const env = {
   paymentWebhookSecret: process.env.PAYMENT_WEBHOOK_SECRET,
   defaultCurrency: (process.env.DEFAULT_CURRENCY || 'CAD').toUpperCase(),
   shippingFee: Number(process.env.SHIPPING_FEE) || 0,
+  // Image storage: set CLOUDINARY_URL (cloudinary://KEY:SECRET@CLOUD_NAME) in production.
+  // Without it, uploads go to server/uploads on local disk (fine for development only).
+  cloudinaryUrl: process.env.CLOUDINARY_URL,
+  // Unpaid online-payment orders are cancelled (and their stock released) after this many hours
+  unpaidOrderHours: Number(process.env.UNPAID_ORDER_HOURS) || 24,
   // Email (optional: without SMTP, emails are logged to the console)
   smtp: {
     host: process.env.SMTP_HOST,

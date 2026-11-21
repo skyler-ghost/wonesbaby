@@ -1,5 +1,5 @@
-// Loads the 13 products from the frontend's assets.js into MongoDB and copies
-// their photos into server/uploads.
+// Loads the 13 sample products into MongoDB and uploads their photos to the image
+// store (Cloudinary when CLOUDINARY_URL is set, otherwise server/uploads).
 //
 //   npm run seed           skips if products already exist
 //   npm run seed -- --force  deletes ALL products first, then re-seeds
@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url'
 import mongoose from 'mongoose'
 import { env } from '../config/env.js'
 import Product from '../models/Product.js'
-import { uploadsDir } from '../middleware/uploadMiddleware.js'
+import { saveImage } from '../services/imageService.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const imagesDir = path.join(__dirname, 'images')
@@ -47,11 +47,12 @@ const run = async () => {
   }
   if (existing > 0) await Product.deleteMany({})
 
-  await fs.mkdir(uploadsDir, { recursive: true })
   const docs = []
   for (const { image, ...rest } of products) {
-    await fs.copyFile(path.join(imagesDir, image), path.join(uploadsDir, image))
-    docs.push({ ...rest, images: [`/uploads/${image}`], stock: 50, description: descriptions[rest.category] || '' })
+    const buffer = await fs.readFile(path.join(imagesDir, image))
+    // Fixed public id, so re-seeding replaces the photo instead of piling up duplicates
+    const url = await saveImage({ buffer, mimetype: 'image/jpeg' }, { publicId: path.parse(image).name })
+    docs.push({ ...rest, images: [url], stock: 50, description: descriptions[rest.category] || '' })
   }
 
   await Product.insertMany(docs)

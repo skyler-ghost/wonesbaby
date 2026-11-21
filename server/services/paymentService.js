@@ -2,6 +2,7 @@ import { env } from '../config/env.js'
 import Order from '../models/Order.js'
 import { HttpError } from '../middleware/errorHandler.js'
 import { sendPaymentReceived } from './notificationService.js'
+import stripeProvider from './stripeProvider.js'
 
 /*
  * All gateway-specific code lives behind this small interface, so adding a
@@ -26,6 +27,8 @@ const providers = {
       return { reference: `MAN-${order.orderNumber}`, paymentUrl: null }
     },
   },
+  // Card payments through Stripe Checkout. Selected with PAYMENT_PROVIDER=stripe
+  stripe: stripeProvider,
 }
 
 export const registerProvider = (provider) => {
