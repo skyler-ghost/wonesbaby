@@ -23,8 +23,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const app = express()
 
 app.set('trust proxy', 1) // correct client IPs for rate limiting behind a host's proxy
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } })) // lets the frontend load /uploads images
-app.use(cors({ origin: env.clientUrl }))
+// Helmet's default CSP only allows images from this server, which would block Cloudinary photos
+// (and Stripe-hosted images) once the built site is served from Express. Allow https images.
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' }, // lets a separately hosted frontend load /uploads images
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        'img-src': ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
+      },
+    },
+  })
+)
+// CLIENT_URL may be a comma-separated list; trailing slashes are ignored so "https://x.com/" still matches
+const allowedOrigins = env.clientUrl.split(',').map((o) => o.trim().replace(/\/+$/, '')).filter(Boolean)
+app.use(cors({ origin: allowedOrigins }))
 
 // The payment webhook needs the untouched raw body to check the gateway's signature,
 // so this must come before express.json().

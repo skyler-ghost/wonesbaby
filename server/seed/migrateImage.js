@@ -2,7 +2,7 @@
 // Uploads each photo to Cloudinary and rewrites the product. Photos are looked up in server/uploads
 // first, then server/seed/images (the sample catalogue photos that ship with the repo).
 //
-//   CLOUDINARY_URL=cloudinary://KEY:SECRET@CLOUD node server/seed/migrateImages.js
+//   CLOUDINARY_URL=cloudinary://KEY:SECRET@CLOUD node server/seed/migrateImage.js
 //
 // Uses MONGODB_URI from .env, so run it from your computer against the same Atlas database Render uses.
 import fs from 'fs/promises'

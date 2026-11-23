@@ -43,19 +43,25 @@ export const getProvider = (name = env.paymentProvider) => {
   return provider
 }
 
-// Idempotent: calling it twice for the same order does nothing the second time.
+// Idempotent and safe against the webhook and the return-page check running at the same moment:
+// the unpaid -> paid flip is one atomic update, so only one caller wins and sends the receipt.
 export const markOrderPaid = async (order, note = 'Payment confirmed') => {
   if (order.payment.status === 'Paid') return order
 
-  order.payment.status = 'Paid'
-  order.payment.paidAt = new Date()
-  if (order.status === 'Pending') {
-    order.status = 'Processing'
-    order.statusHistory.push({ status: 'Processing', note })
+  const claimed = await Order.findOneAndUpdate(
+    { _id: order._id, 'payment.status': { $ne: 'Paid' } },
+    { $set: { 'payment.status': 'Paid', 'payment.paidAt': new Date() } },
+    { new: true }
+  )
+  if (!claimed) return Order.findById(order._id) // someone else already marked it paid
+
+  if (claimed.status === 'Pending') {
+    claimed.status = 'Processing'
+    claimed.statusHistory.push({ status: 'Processing', note })
+    await claimed.save()
   }
-  await order.save()
-  sendPaymentReceived(order)
-  return order
+  sendPaymentReceived(claimed)
+  return claimed
 }
 
 export const markOrderPaymentFailed = async (order) => {
