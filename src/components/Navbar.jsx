@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { assets, navLinks } from '../assets/assets'
 import { useCart } from '../context/CartContext'
+import { useWishlist } from '../context/WishlistContext'
 
 const socials = [
   { icon: 'fa-instagram', label: 'Instagram', url:'https://www.instagram.com/wones_babyglobal?mdxt=MTU4ZW9mczNjZ2pkeg=='},
@@ -12,6 +13,7 @@ const socials = [
 const Navbar = () => {
   const [open, setOpen] = useState(false)
   const { count } = useCart()
+  const { count: wishCount } = useWishlist()
 
   const linkClass = ({ isActive }) =>
     `transition-colors hover:text-primary ${isActive ? 'text-primary border-b-2 border-primary pb-1' : 'text-gray-700'}`
@@ -41,6 +43,10 @@ const Navbar = () => {
             <i className={`fa-brands ${s.icon}`}></i>
           </a>
         ))}
+        <Link to='/wishlist' className='relative ml-1 text-lg md:text-xl text-gray-700 hover:text-primary cursor-pointer' aria-label='Wishlist'>
+          <i className='fa-regular fa-heart'></i>
+          {wishCount > 0 && <span className='absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-primary text-white text-[9px] flex items-center justify-center'>{wishCount}</span>}
+        </Link>
         <Link to={'/cart'} className='relative ml-1 text-lg md:text-xl text-gray-700 hover:text-primary cursor-pointer' aria-label='Cart'>
           <i className='fa-solid fa-cart-shopping'></i>
           {count > 0 && <span className='absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-amber-400 text-white text-[9px] flex items-center justify-center'>{count}</span>}

@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom'
 import StarRating from './StarRating'
 import { useCart } from '../context/CartContext'
+import { useWishlist } from '../context/WishlistContext'
 import { useStore } from '../context/StoreContext'
 import { imageUrl } from '../lib/api'
 
 const ProductCard = ({ product, className = '' }) => {
   const { addToCart } = useCart()
   const { money } = useStore()
+  const { has, toggle } = useWishlist()
+  const wished = has(product._id)
   const onSale = product.oldPrice > product.price
   const soldOut = product.stock <= 0
 
@@ -20,6 +23,9 @@ const ProductCard = ({ product, className = '' }) => {
           className={`w-full aspect-square object-cover bg-peach/30 ${soldOut ? 'opacity-60' : ''}`}
         />
       </Link>
+      <button onClick={() => toggle(product._id)} aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'} aria-pressed={wished} className='absolute top-2 left-2 w-8 h-8 rounded-full bg-white/90 shadow text-primary cursor-pointer'>
+        <i className={`${wished ? 'fa-solid' : 'fa-regular'} fa-heart`}></i>
+      </button>
       {(soldOut || onSale) && (
         <p className={`absolute top-2 right-2 px-3 py-1 rounded-full text-white text-[10px] font-bold ${soldOut ? 'bg-gray-500' : 'bg-primary'}`}>
           {soldOut ? 'Sold out' : 'Sale'}

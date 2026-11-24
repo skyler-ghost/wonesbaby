@@ -4,6 +4,7 @@ import StarRating from '../components/StarRating'
 import ContactBanner from '../components/ContactBanner'
 import { assets } from '../assets/assets'
 import { useCart } from '../context/CartContext'
+import { useWishlist } from '../context/WishlistContext'
 import { useStore } from '../context/StoreContext'
 import { useApi } from '../lib/useApi'
 import { imageUrl } from '../lib/api'
@@ -24,6 +25,7 @@ const tabs = [
 const ProductDetails = () => {
   const { id } = useParams()
   const { addToCart } = useCart()
+  const { has, toggle } = useWishlist()
   const { money } = useStore()
   const { data, loading, error, status } = useApi(`/api/products/${id}`)
   const product = data?.product
@@ -33,7 +35,6 @@ const ProductDetails = () => {
   const [active, setActive] = useState(0)
   const [qty, setQty] = useState(1)
   const [tab, setTab] = useState('description')
-  const [wish, setWish] = useState(false)
   const [zoom, setZoom] = useState(false)
   const [added, setAdded] = useState(false)
 
@@ -54,6 +55,7 @@ const ProductDetails = () => {
     )
   }
 
+  const wish = has(product._id)
   const gallery = product.images.map(imageUrl)
   const onSale = product.oldPrice > product.price
   const save = onSale ? Math.round((1 - product.price / product.oldPrice) * 100) : 0
@@ -117,7 +119,7 @@ const ProductDetails = () => {
         <div className='min-w-0'>
           <div className='flex items-start justify-between gap-4'>
             <h1 className='font-baloo text-2xl md:text-4xl font-bold text-plum leading-tight'>{product.name}</h1>
-            <button onClick={() => setWish(!wish)} aria-label='Wishlist' className='text-3xl text-primary cursor-pointer'>
+            <button onClick={() => toggle(product._id)} aria-label={wish ? 'Remove from wishlist' : 'Add to wishlist'} aria-pressed={wish} className='text-3xl text-primary cursor-pointer'>
               <i className={`${wish ? 'fa-solid' : 'fa-regular'} fa-heart`}></i>
             </button>
           </div>
@@ -164,7 +166,7 @@ const ProductDetails = () => {
             </button>
           </div>
 
-          <button onClick={() => setWish(!wish)} className='w-full mt-3 py-2 rounded-full bg-blush/60 text-primary font-semibold text-sm cursor-pointer'>
+          <button onClick={() => toggle(product._id)} className='w-full mt-3 py-2 rounded-full bg-blush/60 text-primary font-semibold text-sm cursor-pointer'>
             <i className={`${wish ? 'fa-solid' : 'fa-regular'} fa-heart mr-2`}></i>{wish ? 'Added to Wishlist' : 'Add to Wishlist'}
           </button>
 

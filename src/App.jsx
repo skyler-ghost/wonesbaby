@@ -14,6 +14,7 @@ import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import Track from './pages/Track'
 import PaymentResult from './pages/PaymentResult'
+import Wishlist from './pages/Wishlist'
 import Admin from './pages/Admin'
 
 const NotFound = () => (
@@ -48,6 +49,7 @@ const App = () => {
           <Route path='/contact' element={<Contact />}/>
           <Route path='/product/:id' element={<ProductDetails />} />
           <Route path='/cart' element={<Cart />} />
+          <Route path='/wishlist' element={<Wishlist />} />
           <Route path='/checkout' element={<Checkout />} />
           <Route path='/track' element={<Track />} />
           <Route path='/payment/result' element={<PaymentResult />} />

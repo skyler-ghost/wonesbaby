@@ -6,13 +6,17 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { StoreProvider } from './context/StoreContext.jsx'
 import { CartProvider } from './context/CartContext.jsx'
+import { WishlistProvider } from './context/WishlistContext.jsx'
+import 'leaflet/dist/leaflet.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <StoreProvider>
         <CartProvider>
-          <App />
+          <WishlistProvider>
+            <App />
+          </WishlistProvider>
         </CartProvider>
       </StoreProvider>
     </BrowserRouter>

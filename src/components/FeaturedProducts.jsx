@@ -10,7 +10,8 @@ const FeaturedProducts = () => {
   const needFallback = !featured.loading && !featured.error && featured.data?.products.length === 0
   const latest = useApi(needFallback ? '/api/products?limit=10' : null)
 
-  const products = featured.data?.products.length ? featured.data.products : latest.data?.products || []
+  const rawProducts = featured.data?.products.length ? featured.data.products : latest.data?.products || []
+  const products = [...rawProducts].reverse()
   const loading = featured.loading || latest.loading
 
   const scroll = (dir) => {

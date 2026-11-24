@@ -40,7 +40,7 @@ const Footer = () => {
           <h4 className='font-bold text-gray-800 mb-2'>Contact Us</h4>
           <p className='flex items-center gap-2'><i className='fa-regular fa-envelope text-primary'></i> wonesbaby@gmail.com</p>
           <h4 className='font-bold text-gray-800 mt-3 mb-1'>Visit Us</h4>
-          <p className='flex items-start gap-2'><i className='fa-solid fa-location-dot text-primary mt-0.5'></i> Surulere, Lagos & Gonin-Gora, Kaduna</p>
+          <p className='flex items-start gap-2'><i className='fa-solid fa-location-dot text-primary mt-0.5'></i> Canada • Nigeria</p>
         </div>
       </div>
 
