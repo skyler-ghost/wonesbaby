@@ -1,4 +1,7 @@
-import logo from "./wones-baby-logo-reference.png";
+import logo from "./wones-logo.png";
+import heroBottle from "./hero-bottle.jpg";
+import momentHighchair from "./moment-highchair.jpg";
+import momentBottleReach from "./moment-bottle-reach.jpg";
 import heroBaby from "./hero-baby-with-elephant-teether.png";
 import heroProducts from "./hero-product-arrangement.png";
 import heroBanner from "./hero-banner-reference.png";
@@ -30,6 +33,8 @@ import questionMark from "./question-mark.svg";
 import starFace from "./star-face.svg";
 export const assets = {
   logo,
+  heroBottle,
+  moments: { highchair: momentHighchair, bottleReach: momentBottleReach },
   heroBaby,
   heroProducts,
   heroBanner,

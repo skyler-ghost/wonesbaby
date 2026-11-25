@@ -112,7 +112,7 @@ const Shop = () => {
         title='Shop Our'
         accent='Baby Products'
         text='Safe, fun and stylish essentials for your little one.'
-        image={assets.heroBaby}
+        image={assets.heroBottle}
         button={{ label: 'Browse Products', to: '/shop' }}
       />
 
