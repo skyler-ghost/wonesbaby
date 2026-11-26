@@ -22,7 +22,7 @@ const Navbar = () => {
     <nav className='sticky top-0 z-50 bg-white/95 backdrop-blur flex items-center justify-between px-4 md:px-8 lg:px-16 xl:px-24 py-2'>
       {/* Logo */}
       <Link to='/'>
-        <img src={assets.logo} alt='Wones Baby' className='h-12 md:h-14 mix-blend-multiply' />
+        <img src={assets.logo} alt='Wones' className='h-7 md:h-9 w-auto' />
       </Link>
 
       {/* Desktop links */}

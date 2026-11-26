@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom'
 import { assets, footerLinks } from '../assets/assets'
+import { usePrivacy } from '../context/PrivacyContext'
 
 const Footer = () => {
+  const { openPolicy } = usePrivacy()
   return (
     <footer className='bg-linear-to-b from-white to-blush/40'>
       <div className='px-4 md:px-8 lg:px-16 xl:px-24 py-8 grid grid-cols-2 md:grid-cols-[1.2fr_1fr_1fr_1.4fr] gap-6 text-xs'>
         <div className='col-span-2 md:col-span-1'>
-          <img src={assets.logo} alt='Wones Baby' className='h-14 mix-blend-multiply' />
+          <img src={assets.logo} alt='Wones' className='h-9 w-auto' />
           <p className='font-semibold text-gray-700 mt-1'>Simple. Safe. Special.</p>
           <div className='flex gap-4 mt-3 text-lg text-gray-700'>
             <a href='#' aria-label='Instagram'><i className='fa-brands fa-instagram hover:text-primary'></i></a>
@@ -31,7 +33,11 @@ const Footer = () => {
           <h4 className='font-bold text-gray-800 mb-2'>Customer Care</h4>
           <ul className='space-y-1.5'>
             {footerLinks.care.map((l) => (
-              <li key={l}><Link to='/' className='hover:text-primary'>{l}</Link></li>
+              <li key={l}>
+                {l === 'Privacy Policy'
+                  ? <button type='button' onClick={openPolicy} className='hover:text-primary cursor-pointer'>{l}</button>
+                  : <Link to='/' className='hover:text-primary'>{l}</Link>}
+              </li>
             ))}
           </ul>
         </div>
@@ -45,7 +51,7 @@ const Footer = () => {
       </div>
 
       <div className='bg-leaf/70 px-4 md:px-8 lg:px-16 xl:px-24 py-2 flex justify-between text-[10px] text-gray-700'>
-        <p>© 2024 Wones Baby. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Wones. All rights reserved.</p>
         <p className='hidden sm:block'>Made with <i className='fa-solid fa-heart text-primary'></i> for little ones</p>
       </div>
     </footer>

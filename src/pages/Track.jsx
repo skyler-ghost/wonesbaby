@@ -53,7 +53,7 @@ const Track = () => {
 
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-24 pb-10'>
-      <PageHero crumb='Track Order' title='Track Your' accent='Order' text='Enter your order number and the email you used at checkout.' image={assets.heroBaby} />
+      <PageHero crumb='Track Order' title='Track Your' accent='Order' text='Enter your order number and the email you used at checkout.' image={assets.heroBottle} />
 
       <form onSubmit={onSubmit} className='mt-6 max-w-xl mx-auto rounded-2xl bg-white shadow-[0px_4px_12px_rgba(0,0,0,0.06)] p-5 md:p-6 space-y-3'>
         <input value={form.orderNumber} onChange={(e) => setForm({ ...form, orderNumber: e.target.value })} required placeholder='Order number (e.g. WB-XXXX-XXXX)' className={input} />

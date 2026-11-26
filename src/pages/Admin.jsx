@@ -40,7 +40,7 @@ const Login = ({ onLogin }) => {
   return (
     <div className='min-h-screen bg-lilac/30 flex items-center justify-center px-4'>
       <form onSubmit={submit} className='w-full max-w-sm rounded-2xl bg-white shadow-[0px_4px_12px_rgba(0,0,0,0.08)] p-6 space-y-3'>
-        <img src={assets.logo} alt='Wones Baby' className='h-14 mx-auto mix-blend-multiply' />
+        <img src={assets.logo} alt='Wones' className='h-9 w-auto mx-auto' />
         <h1 className='font-baloo text-2xl font-bold text-plum text-center'>Admin Login</h1>
         <input type='email' value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required placeholder='Email' autoComplete='username' className={input} />
         <input type='password' value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required placeholder='Password' autoComplete='current-password' className={input} />
@@ -101,7 +101,7 @@ const Admin = () => {
   const sidebar = (
     <div className='h-full bg-white flex flex-col'>
       <div className='px-5 py-4'>
-        <img src={assets.logo} alt='Wones Baby' className='h-12 mix-blend-multiply' />
+        <img src={assets.logo} alt='Wones' className='h-8 w-auto' />
         <p className='text-xs font-bold text-plum ml-1'><i className='fa-solid fa-star text-amber-400 text-[9px] mr-1'></i>Admin</p>
       </div>
       <nav className='px-3 mt-2 space-y-1 flex-1'>
@@ -135,7 +135,7 @@ const Admin = () => {
       <div className='min-w-0'>
         <header className='flex items-center justify-between px-4 md:px-6 py-3 bg-white/80'>
           <button onClick={() => setOpen(true)} className='lg:hidden text-xl text-gray-700 cursor-pointer' aria-label='Menu'><i className='fa-solid fa-bars'></i></button>
-          <img src={assets.logo} alt='' className='lg:hidden h-9 mix-blend-multiply' />
+          <img src={assets.logo} alt='' className='lg:hidden h-7 w-auto' />
           <div className='flex items-center gap-2 ml-auto text-sm font-semibold text-gray-700'>
             <span className='w-8 h-8 rounded-full bg-plum text-white text-xs flex items-center justify-center'>{initials}</span>
             <span className='hidden sm:inline'>{admin.name || admin.email}</span>

@@ -16,6 +16,7 @@ import Track from './pages/Track'
 import PaymentResult from './pages/PaymentResult'
 import Wishlist from './pages/Wishlist'
 import Admin from './pages/Admin'
+import { PrivacyProvider } from './context/PrivacyContext'
 
 const NotFound = () => (
   <div className='px-4 py-20 text-center'>
@@ -37,6 +38,7 @@ const App = () => {
   }
 
   return (
+    <PrivacyProvider>
     <div className='bg-white text-gray-600 pb-16 md:pb-0'>
       <TopBar />
       <Navbar />
@@ -59,6 +61,7 @@ const App = () => {
       <Footer />
       <MobileTabBar />
     </div>
+    </PrivacyProvider>
   )
 }
 

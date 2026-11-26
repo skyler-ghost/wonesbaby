@@ -16,7 +16,7 @@ const StoryAndNewsletter = () => {
         <img src={assets.story.videoThumbnail} alt='Watch our story' className='w-32 md:w-44 rounded-2xl cursor-pointer' />
         <div>
           <h3 className='font-baloo text-lg md:text-xl font-bold text-gray-800'>Watch Our Story</h3>
-          <p className='text-xs text-gray-600'>See how Wones Baby started and grew.</p>
+          <p className='text-xs text-gray-600'>See how Wones started and grew.</p>
         </div>
       </div>
 

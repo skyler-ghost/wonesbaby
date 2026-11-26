@@ -2,7 +2,7 @@ import logo from "./wones-logo.png";
 import heroBottle from "./hero-bottle.jpg";
 import momentHighchair from "./moment-highchair.jpg";
 import momentBottleReach from "./moment-bottle-reach.jpg";
-import heroBaby from "./hero-baby-with-elephant-teether.png";
+import storyHighchair from "./wones-baby-highchair.jpg";
 import heroProducts from "./hero-product-arrangement.png";
 import heroBanner from "./hero-banner-reference.png";
 import catNewborn from "./category-newborn-elephant.png";
@@ -35,7 +35,6 @@ export const assets = {
   logo,
   heroBottle,
   moments: { highchair: momentHighchair, bottleReach: momentBottleReach },
-  heroBaby,
   heroProducts,
   heroBanner,
   blobGreen,
@@ -66,7 +65,7 @@ export const assets = {
     bottle10,
     bottle11,
   },
-  story: { baby: storyBaby, videoThumbnail },
+  story: { baby: storyBaby, home: storyHighchair, videoThumbnail },
 };
 export const features = [
   {

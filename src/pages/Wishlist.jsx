@@ -51,7 +51,7 @@ const Wishlist = () => {
 
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-24 pb-10'>
-      <PageHero title='Your Wishlist' accent='' text='Products you love, saved on this device' image={assets.heroBaby} />
+      <PageHero title='Your Wishlist' accent='' text='Products you love, saved on this device' image={assets.heroBottle} />
 
       {ids.length === 0 ? (
         <div className='text-center py-16'>

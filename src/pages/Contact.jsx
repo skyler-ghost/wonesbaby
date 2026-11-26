@@ -136,7 +136,7 @@ const Contact = () => {
           </>
         }
         text="Have a question, need assistance, or want to share your experience? We’re here to help."
-        image={assets.heroBaby}
+        image={assets.heroBottle}
       />
 
       {/* Contact information and message form */}

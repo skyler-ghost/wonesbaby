@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Caveat:wght@500;600&family=Nunito:wght@400;500;600;700&display=swap');
+/* Brand typography (Mini-Brand Guide 2023): Alice = primary/display serif, Lato = secondary sans (Light 300, Regular 400, Bold 700) */
+@import url('https://fonts.googleapis.com/css2?family=Alice&family=Lato:wght@300;400;700&display=swap');
 
 @import "tailwindcss";
 
@@ -15,16 +16,22 @@
 }
 
 * {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
-.font-baloo {
-    font-family: 'Baloo 2', sans-serif !important;
-}
-
+/* Alice only ships in Regular, so never fake a bold on it. */
+/* (.font-baloo / .font-script are the existing class names used across the site; they now render in Alice.) */
+.font-baloo,
 .font-script {
-    font-family: 'Caveat', cursive !important;
+    font-family: 'Alice', serif !important;
+    font-weight: 400 !important;
+    font-synthesis: none;
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
+@keyframes cookie-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}

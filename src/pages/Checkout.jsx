@@ -93,7 +93,7 @@ const Checkout = () => {
 
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-24 pb-10'>
-      <PageHero title='Checkout' accent='' text='Tell us where to send your order. No account needed.' image={assets.heroBaby} />
+      <PageHero title='Checkout' accent='' text='Tell us where to send your order. No account needed.' image={assets.heroBottle} />
 
       <form onSubmit={onSubmit} className='mt-6 grid lg:grid-cols-[1.4fr_1fr] gap-6'>
         <div className='rounded-2xl bg-white shadow-[0px_4px_12px_rgba(0,0,0,0.06)] p-5 md:p-6'>

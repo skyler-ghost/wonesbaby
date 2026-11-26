@@ -8,9 +8,9 @@ const About = () => {
       <PageHero
         crumb="About Us"
         title="Our Story"
-        accent="At Wones Baby"
+        accent="At Wones"
         text="Born from love, made for little ones."
-        image={assets.heroBaby}
+        image={assets.heroBottle}
       />
 
       {/* Our Beginning */}
@@ -18,9 +18,9 @@ const About = () => {
         {/* Left: Image */}
         <div className="relative">
           <img
-            src={assets.heroProducts}
-            alt="Wones Baby products"
-            className="w-full h-56 md:h-[260px] object-cover rounded-3xl"
+            src={assets.moments.highchair}
+            alt="Baby in a high chair holding a Wones bottle"
+            className="w-full h-72 md:h-[380px] object-cover object-[50%_30%] rounded-3xl"
           />
         </div>
 
@@ -38,14 +38,14 @@ const About = () => {
 
           <div className="space-y-3 text-sm md:text-[14px] leading-relaxed text-gray-600">
             <p>
-              Wones Baby started in 2022 during my pregnancy with my first
+              Wones started in 2022 during my pregnancy with my first
               child, Fay. What began as a personal journey quickly grew into a
               mission — to create safe, beautiful and practical baby products
               that parents can trust and children will love.
             </p>
 
             <p>
-              Wones Baby is committed to providing{" "}
+              Wones is committed to providing{" "}
               <b>100% food-grade silicone</b>, non-toxic and free of phthalates,
               BPA, lead, and cadmium baby products.
             </p>
@@ -60,7 +60,7 @@ const About = () => {
             </p>
 
             <p>
-              Wones Baby truly understands a mother's love, and we take all
+              Wones truly understands a mother's love, and we take all
               appropriate actions to measure up to that special love.
             </p>
 
@@ -82,7 +82,7 @@ const About = () => {
           Our Promise
         </h2>
         <p className="text-xs md:text-sm text-gray-700">
-          At Wones Baby, we are committed to:
+          At Wones, we are committed to:
         </p>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4 lg:w-[75%]">
           {promises.map((p) => (
@@ -115,7 +115,7 @@ const About = () => {
           </h2>
           <p className="text-xs md:text-sm text-gray-700 mt-1">
             We're more than just products — we're a part of your parenting
-            journey. Thank you for choosing Wones Baby.
+            journey. Thank you for choosing Wones.
           </p>
           <Link
             to="/shop"

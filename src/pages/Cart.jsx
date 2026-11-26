@@ -27,7 +27,7 @@ const Cart = () => {
         title='Your Shopping Cart'
         accent=''
         text='Review your items and proceed to checkout'
-        image={assets.heroBaby}
+        image={assets.heroBottle}
       />
 
       {cartItems.length === 0 ? (

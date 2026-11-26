@@ -4,7 +4,7 @@ import { assets } from '../assets/assets'
 // Shared banner for Shop / FAQ / About
 const PageHero = ({ crumb, badge, title, accent, smallAccent, script, text, image, visual, button }) => {
   return (
-    <section className='relative overflow-hidden rounded-3xl bg-linear-to-r from-[#fbe6f2] via-[#f8dcee] to-[#f3d0e8] min-h-[250px] md:min-h-[320px] flex items-center'>
+    <section className='relative overflow-hidden rounded-3xl bg-linear-to-r from-[#eaf7ef] via-[#dff2e6] to-[#d5ecdc] min-h-[250px] md:min-h-[320px] flex items-center'>
       <img src={assets.blobGreen} alt='' className='absolute -top-10 -right-10 w-32 md:w-48 opacity-70' />
       <img src={assets.blobGreen} alt='' className='absolute -bottom-12 -left-10 w-32 md:w-48 opacity-60' />
       <img src={assets.heartOutline} alt='' className='hidden md:block absolute top-10 left-[48%] w-9 rotate-12' />
@@ -38,7 +38,7 @@ const PageHero = ({ crumb, badge, title, accent, smallAccent, script, text, imag
       </div>
 
       {image && (
-        <img src={image} alt='' className='absolute right-0 top-0 h-full w-[46%] md:w-[52%] object-cover object-center mask-l-from-60% mask-b-from-80%' />
+        <img src={image} alt='' className='absolute right-0 top-0 h-full w-[46%] md:w-[52%] object-cover object-[50%_45%] mask-l-from-65%' />
       )}
       {script && (
         <p className='hidden lg:block absolute top-28 left-[47%] z-10 font-script text-3xl text-plum leading-tight -rotate-6'>{script}</p>
