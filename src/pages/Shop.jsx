@@ -3,16 +3,16 @@ import { useSearchParams } from 'react-router-dom'
 import PageHero from '../components/PageHero'
 import ProductCard from '../components/ProductCard'
 import ContactBanner from '../components/ContactBanner'
-import { assets } from '../assets/assets'
+import { assets, categories as defaultCategories} from '../assets/assets'
 import { useApi } from '../lib/useApi'
 import { useStore } from '../context/StoreContext'
+
 
 const PAGE_SIZE = 8
 
 // Photo for each category tile (categories themselves come from the products in the database)
 const categoryImages = {
   Teethers: assets.categories.newborn,
-  Newborn: assets.categories.newborn,
   Feeding: assets.categories.feeding,
   'Bath Time': assets.categories.bathTime,
   'Toys & Play': assets.categories.toysPlay,
@@ -41,7 +41,7 @@ const Shop = () => {
   const [params] = useSearchParams()
   const { data, loading, error } = useApi('/api/products?limit=100')
   const allProducts = data?.products || []
-  const shopCategories = [...new Set(allProducts.map((p) => p.category))].sort()
+  const shopCategories = [...new Set([...defaultCategories.map((c) => c.name), ...allProducts.map((p) => p.category)])]
 
   // Price bands are worked out from the real prices, so they suit any currency (dollars or naira)
   const priceRanges = buildPriceRanges(allProducts.map((p) => p.price), (n) => money(n).replace(/\.00$/, ''))
@@ -118,13 +118,17 @@ const Shop = () => {
 
       {/* Category strip (desktop) */}
       <div className='hidden lg:flex gap-4 mt-5'>
-        {shopCategories.map((name) => (
-          <button key={name} onClick={() => { setCats([name]); setPage(1) }} className='w-36 rounded-2xl overflow-hidden bg-peach/50 hover:-translate-y-1 transition-all cursor-pointer'>
-            <img src={categoryImages[name] || assets.categories.feeding} alt={name} className='w-full h-20 object-cover object-top mix-blend-multiply' />
-            <p className='text-xs font-bold text-gray-800 py-2'>{name}</p>
-          </button>
-        ))}
-      </div>
+      <button onClick={() => { setCats([]); setPage(1) }} className={`w-36 rounded-2xl overflow-hidden bg-peach/50 hover:-translate-y-1 transition-all cursor-pointer ${cats.length === 0 ? 'ring-2 ring-primary' : ''}`}>
+        <img src={assets.categories.all} alt='All products' className='w-full h-20 object-cover object-center' />
+        <p className='text-xs font-bold text-gray-800 py-2'>All Products</p>
+      </button>
+      {shopCategories.map((name) => (
+      <button key={name} onClick={() => { setCats([name]); setPage(1) }} className={`w-36 rounded-2xl overflow-hidden bg-peach/50 hover:-translate-y-1 transition-all cursor-pointer ${cats.length === 1 && cats[0] === name ? 'ring-2 ring-primary' : ''}`}>
+      <img src={categoryImages[name] || assets.categories.feeding} alt={name} className='w-full h-20 object-cover object-top mix-blend-multiply' />
+      <p className='text-xs font-bold text-gray-800 py-2'>{name}</p>
+    </button>
+      ))}
+    </div>
 
       <div className='mt-6 grid md:grid-cols-[200px_1fr] gap-6'>
         {/* Filters */}

@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { formatMoney, imageUrl } from '../lib/api'
 import { useStore } from '../context/StoreContext'
 
+
+const CATEGORY_OPTIONS = ['Feeding', 'Teethers', 'Bath Time', 'Toys & Play', 'On The Go']
+
 const input = 'w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-primary'
 const blank = { name: '', category: '', price: '', oldPrice: '', stock: '0', description: '', featured: false, active: true }
 
@@ -59,8 +62,10 @@ const ProductForm = ({ product, categories, call, onClose, onSaved }) => {
         <input value={form.name} onChange={set('name')} required placeholder='Product name *' className={input} />
         <div className='grid sm:grid-cols-2 gap-3'>
           <div>
-            <input list='category-options' value={form.category} onChange={set('category')} required placeholder='Category * (e.g. Feeding)' className={input} />
-            <datalist id='category-options'>{categories.map((c) => <option key={c} value={c} />)}</datalist>
+            <select value={form.category} onChange={set('category')} required className={input}>
+            <option value='' disabled>Select category *</option>
+              {[...new Set([...CATEGORY_OPTIONS, ...categories])].map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
           </div>
           <input type='number' min='0' value={form.stock} onChange={set('stock')} required placeholder='Stock' className={input} />
           <input type='number' min='0' step='0.01' value={form.price} onChange={set('price')} required placeholder='Price *' className={input} />

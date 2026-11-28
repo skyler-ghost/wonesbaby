@@ -10,6 +10,7 @@ import catFeeding from "./category-feeding-set.png";
 import catBathTime from "./category-bath-time-duck.png";
 import catToysPlay from "./category-toys-and-play.png";
 import catOnTheGo from "./category-on-the-go-cup.png";
+import catAll from "./category-all-products.png";
 import teetherElephant from "./teether-elephant-blue.jpeg";
 import teetherCat from "./teether-cat-pink.jpeg";
 import teetherBear from "./teether-bear-black.jpeg";
@@ -44,6 +45,7 @@ export const assets = {
   questionMark,
   starFace,
   categories: {
+    all: catAll,
     newborn: catNewborn,
     feeding: catFeeding,
     bathTime: catBathTime,
@@ -98,7 +100,7 @@ export const features = [
   },
 ];
 export const categories = [
-  { name: "Newborn", image: assets.categories.newborn },
+  { name: "Teethers", image: assets.categories.newborn },
   { name: "Feeding", image: assets.categories.feeding },
   { name: "Bath Time", image: assets.categories.bathTime },
   { name: "Toys & Play", image: assets.categories.toysPlay },
